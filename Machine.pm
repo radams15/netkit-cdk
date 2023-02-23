@@ -37,9 +37,11 @@ sub attach {
 sub extra {
 	my $class = shift;
 	
-	my ($data) = @_;
+	my %params = @_;
 	
-	$class->{startup_buffer} .= "\n" . $data . "\n";
+	$class->{startup_buffer} .= "\n######### $params{header} #########\n\n" if(defined $params{header});
+	
+	$class->{startup_buffer} .= "\n" . $params{data} . "\n";
 }
 
 sub dump_startup {

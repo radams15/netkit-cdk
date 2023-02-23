@@ -62,9 +62,10 @@ $r2->attach(
 );
 
 
-$r2->extra('######### Firewall Rules #########
-
-iptables --policy FORWARD DROP');
+$r2->extra(
+	header => 'Firewall Rules',
+	data =>'iptables --policy FORWARD DROP',
+);
 
 
 $lab->dump($staff_1, $r2);
