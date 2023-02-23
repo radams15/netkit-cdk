@@ -9,10 +9,14 @@ use Lan;
 use Lab;
 use Interface;
 
+
 my $lab = Lab->new(
 	name => 'TestLab',
 	out_dir => 'res',
+	data_dir => 'data',
 );
+
+
 my $ext_www_lan = Lan->new('ExtWWW');
 my $dmz_lan = Lan->new('Dmz');
 my $staff_lan = Lan->new('Staff');
@@ -31,7 +35,7 @@ my $r2 = Machine->new(
 			ip => '10.0.0.1/20',
 			mac => 'a8:20:66:3e:42:cf',
 		)
-	] # Eth0, Eth1
+	]
 );
 
 my $staff_1 = Machine->new(
@@ -42,12 +46,12 @@ my $staff_1 = Machine->new(
 			ip => '10.0.0.5/20',
 			mac => 'a8:30:67:3f:42:cf',
 		)
-	] # Eth0
+	]
 );
 
 $staff_1->attach(
 	lan => $staff_lan,
-	eth => 0 # Attach eth0 to $staff_lan
+	eth => 0
 );
 
 
