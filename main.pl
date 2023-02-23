@@ -8,6 +8,7 @@ use Machine;
 use Lan;
 use Lab;
 use Interface;
+use Route;
 
 
 my $lab = Lab->new(
@@ -34,8 +35,18 @@ my $r2 = Machine->new(
 			eth => 1,
 			ip => '10.0.0.1/20',
 			mac => 'a8:20:66:3e:42:cf',
-		)
-	]
+		),
+	],
+	routes => [
+		Route->new(
+			dst => 'default',
+			via => '192.168.0.1'
+		),
+		Route->new(
+			dst => '172.16.0.0/24',
+			via => '192.168.0.2'
+		),
+	],
 );
 
 my $staff_1 = Machine->new(
@@ -45,8 +56,14 @@ my $staff_1 = Machine->new(
 			eth => 0,
 			ip => '10.0.0.5/20',
 			mac => 'a8:30:67:3f:42:cf',
-		)
-	]
+		),
+	],
+	routes => [
+		Route->new(
+			dst => 'default',
+			via => '10.0.0.1'
+		),
+	],
 );
 
 $staff_1->attach(

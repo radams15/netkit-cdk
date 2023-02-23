@@ -9,13 +9,15 @@ sub new {
 	my %params = @_;
 	
 	my $name = $params{name};
-	my @interfaces = @{ $params{interfaces} };	
+	my @interfaces = @{ $params{interfaces} };
+	my @routes = @{ $params{routes} };
 
 	my $self = bless {
 		name => $name,
 		interfaces => \@interfaces,
 		conf_buffer => '',
 		startup_buffer => '',
+		routes => \@routes,
 	}, $class;
 
 	return $self;
@@ -55,6 +57,15 @@ sub dump_startup {
 		print "ip link set eth$_->{eth} up\n";
 		
 		print "\n\n";
+	}
+	
+	for (@{$class->{routes}}){
+		print "ip route add $_->{dst} ";
+		
+		print "via $_->{via} " if(defined $_->{via});
+		print "dev $_->{dev} " if(defined $_->{dev});
+		
+		print "\n";
 	}
 	
 	print $class->{startup_buffer}, "\n";
