@@ -7,6 +7,7 @@ use lib '.';
 use Machine;
 use Lan;
 use Lab;
+use Interface;
 
 my $lab = Lab->new(
 	name => 'TestLab',
@@ -19,12 +20,29 @@ my $staff_lan = Lan->new('Staff');
 
 my $r2 = Machine->new(
 	name => 'r2',
-	interfaces => [0, 1] # Eth0, Eth1
+	interfaces => [
+		Interface->new(
+			eth => 0,
+			ip => '192.168.0.3/24',
+			mac => 'a8:20:66:2d:30:bf',
+		),
+		Interface->new(
+			eth => 1,
+			ip => '10.0.0.1/20',
+			mac => 'a8:20:66:3e:42:cf',
+		)
+	] # Eth0, Eth1
 );
 
 my $staff_1 = Machine->new(
 	name => 'Staff-1',
-	interfaces => [0] # Eth0
+	interfaces => [
+		Interface->new(
+			eth => 0,
+			ip => '10.0.0.5/20',
+			mac => 'a8:30:67:3f:42:cf',
+		)
+	] # Eth0
 );
 
 $staff_1->attach(

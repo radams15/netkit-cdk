@@ -55,15 +55,15 @@ LAB_EMAIL=$class->{email}\n\n";
 		
 		print "* Dumping $fname\n";
 		
-		open FH, '>', $fname;
-		select FH;
+		#open FH, '>', $fname;
+		#select FH;
 		
 		print "****** $name ******\n\n";
 		
 		$_->dump_startup;
 		
-		select STDOUT;
-		close FH;
+		#select STDOUT;
+		#close FH;
 	}
 }
 

@@ -45,6 +45,16 @@ sub extra {
 sub dump_startup {
 	my $class = shift;
 	
+	for (@{$class->{interfaces}}){
+		print "ip link set dev eth$_->{eth} address $_->{mac}\n" if(defined $_->{mac});
+		
+		print "ip addr add $_->{ip} dev eth$_->{eth}\n" if(defined $_->{ip});
+		
+		print "ip link set eth$_->{eth} up\n";
+		
+		print "\n\n";
+	}
+	
 	print $class->{startup_buffer}, "\n";
 }
 
