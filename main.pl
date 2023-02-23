@@ -1,15 +1,17 @@
-# Specification
+#!/usr/bin/perl
 
-```perl
+use strict;
+use warnings;
 
-use Lan;
+use lib '.';
 use Machine;
+use Lan;
+use Lab;
 
 my $lab = Lab->new(
 	name => 'TestLab',
 	out_dir => 'res',
 );
-
 my $ext_www_lan = Lan->new('ExtWWW');
 my $dmz_lan = Lan->new('Dmz');
 my $staff_lan = Lan->new('Staff');
@@ -48,4 +50,3 @@ iptables --policy FORWARD DROP');
 
 
 $lab->dump($staff_1, $r2);
-```
