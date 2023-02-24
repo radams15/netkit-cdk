@@ -58,6 +58,8 @@ my $r2 = Machine->new(
 			eth => 1
 		),
 	],
+	extra => "\n\n###### Firewall Rules ######\n
+iptables --policy FORWARD DROP\n\n"
 );
 
 my $gw = Machine->new(
@@ -115,11 +117,6 @@ my $staff_1 = Machine->new(
 			eth => 0,
 		),
 	],
-);
-
-$r2->extra(
-	header => 'Firewall Rules',
-	data =>'iptables --policy FORWARD DROP',
 );
 
 

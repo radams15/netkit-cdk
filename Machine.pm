@@ -16,8 +16,8 @@ sub new {
 	my $self = bless {
 		name => $name,
 		interfaces => \@interfaces,
-		conf_buffer => '',
-		startup_buffer => '',
+		conf_buffer => $params{extra_conf} // '',
+		startup_buffer => $params{extra} // '',
 		routes => \@routes,
 		attachments => \@attachments,
 	}, $class;
