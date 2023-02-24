@@ -2,3 +2,8 @@
 /data/
 /cmake-build-debug/
 peda-session*
+*.cxx
+/swig/*.pm
+/swig/*.py
+/swig/*.perl
+/swig/*.so

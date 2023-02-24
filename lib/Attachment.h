@@ -8,7 +8,7 @@
 #include "Lan.h"
 
 struct Attachment {
-    Lan& lan;
+    Lan lan;
     int eth;
 
     void dump(std::ostream& ostream, std::string machine);
