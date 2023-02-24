@@ -1,4 +1,4 @@
-package Interface;
+package Netkit::Interface;
 
 use strict;
 use warnings;

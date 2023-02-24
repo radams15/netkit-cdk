@@ -1,10 +1,12 @@
-package Lab;
+package Netkit::Lab;
 
 use strict;
 use warnings;
 
 use List::Util qw(any);
 use File::Copy::Recursive qw(dircopy);
+
+our $VERSION = '0.01';
 
 sub new {
 	my $class = shift;
@@ -101,3 +103,44 @@ LAB_EMAIL=$class->{email}\n\n";
 }
 
 1;
+
+# Below is stub documentation for your module. You'd better edit it!
+
+=head1 Netkit::Attachment
+
+SDK for netkit - create netkit labs with code.
+
+=head1 SYNOPSIS
+
+Generates a standalone netkit lab from a selection of configurable objects.
+ 
+=head1 DESCRIPTION
+
+A more verbose yet more understandable way to create netkit machines using code.
+
+Generates a standalone netkit lab from a selection of configurable objects.
+
+Allows configurations of:
+
+- LANs
+- Interface attachments
+- Static Routes
+- Firewall rules
+- NAT rules
+
+Other elements of startup files can be added using the Machine extra field.
+
+=head1 AUTHOR
+
+Adams, Rhys <rhys@therhys.co.uk>
+
+=head1 COPYRIGHT AND LICENSE
+
+Copyright (C) 2023 by Rhys Adams
+
+This library is free software; you can redistribute it and/or modify
+it under the same terms as Perl itself, either Perl version 5.32.1 or,
+at your option, any later version of Perl 5 you may have available.
+
+
+=cut

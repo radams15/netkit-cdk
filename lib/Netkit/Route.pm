@@ -1,4 +1,4 @@
-package Route;
+package Netkit::Route;
 
 use strict;
 use warnings;

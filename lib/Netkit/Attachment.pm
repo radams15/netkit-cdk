@@ -1,16 +1,17 @@
-package Lan;
+package Netkit::Attachment;
 
 use strict;
 use warnings;
 
 sub new {
 	my $class = shift;
-	my ($name) = @_;
-
+	my %params = @_;
+	
 	my $self = bless {
-		name => $name,
+		eth => $params{eth},
+		lan => $params{lan},
 	}, $class;
-
+	
 	return $self;
 }
 
