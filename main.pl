@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use lib '.';
+use lib './lib';
 
 use Machine;
 use Lan;
@@ -105,30 +105,6 @@ my $gw = Machine->new(
 	],
 );
 
-for my $port (25, 587, 993) {
-	$gw->rule(
-		Rule->new(
-			chain => 'FORWARD',
-			stateful => 1,
-			proto => 'tcp',
-			dst => '172.16.0.6',
-			dport => $port,
-			action => 'ACCEPT',
-		)
-	);
-	
-	$gw->rule(
-		Rule->new(
-				table => 'nat',
-				chain => 'PREROUTING',
-				proto => 'tcp',
-				to_dst => '172.16.0.6',
-				dport => $port,
-				action => 'DNAT',
-		)
-	);
-}
-
 my $staff_1 = Machine->new(
 	name => 'Staff-1',
 	interfaces => [
@@ -152,5 +128,28 @@ my $staff_1 = Machine->new(
 	],
 );
 
+for my $port (25, 587, 993) {
+	$gw->rule(
+		Rule->new(
+			chain => 'FORWARD',
+			stateful => 1,
+			proto => 'tcp',
+			dst => '172.16.0.6',
+			dport => $port,
+			action => 'ACCEPT',
+		)
+	);
+	
+	$gw->rule(
+		Rule->new(
+				table => 'nat',
+				chain => 'PREROUTING',
+				proto => 'tcp',
+				to_dst => '172.16.0.6',
+				dport => $port,
+				action => 'DNAT',
+		)
+	);
+}
 
 $lab->dump($staff_1, $r2, $gw);
