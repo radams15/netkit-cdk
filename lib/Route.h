@@ -12,7 +12,7 @@ struct Route {
     std::string via;
     std::string dev;
 
-    void dump(std::ostream ostream);
+    void dump(std::ostream& ostream);
 };
 
 

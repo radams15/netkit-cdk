@@ -24,9 +24,8 @@ struct Machine {
     std::vector<Rule> rules;
 
     void rule(Rule rule);
-    void extra(std::string data);
-    void dump_startup(std::ostream ostream);
-    void dump_conf(std::ostream ostream);
+    void dump_startup(std::ostream& ostream);
+    void dump_conf(std::ostream& ostream);
 };
 
 

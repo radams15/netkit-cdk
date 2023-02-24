@@ -8,11 +8,11 @@
 #include <string>
 
 struct Interface {
-    std::string eth;
+    int eth;
     std::string ip;
     std::string mac;
 
-    void dump(std::ostream ostream);
+    void dump(std::ostream& ostream);
 };
 
 

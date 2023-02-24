@@ -21,7 +21,7 @@ struct Rule {
     std::string to_src;
     std::string policy;
 
-    void dump(std::ostream ostream);
+    void dump(std::ostream& ostream);
 };
 
 

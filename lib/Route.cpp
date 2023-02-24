@@ -4,8 +4,20 @@
 
 #include "Route.h"
 
-#include <ostream>
+#include <iostream>
 
-void Route::dump(std::ostream ostream) {
-    ostream << "Dump route!\n\n";
+void Route::dump(std::ostream& ostream) {
+    std::cout << "Dump route!\n\n";
+
+    ostream << "ip route add " << dst;
+
+    if(! via.empty()){
+        ostream << " via " << via;
+    }
+
+    if(! dev.empty()){
+        ostream << " dev " << dev;
+    }
+
+    ostream << std::endl;
 }

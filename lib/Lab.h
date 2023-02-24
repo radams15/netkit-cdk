@@ -17,7 +17,7 @@ struct Lab {
     std::string out_dir;
     std::string data_dir;
 
-    void dump(std::vector<Machine> machines, std::ostream ostream);
+    void dump(std::vector<Machine> machines);
 };
 
 

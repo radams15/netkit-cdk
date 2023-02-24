@@ -10,6 +10,8 @@
 struct Attachment {
     Lan& lan;
     int eth;
+
+    void dump(std::ostream& ostream, std::string machine);
 };
 
 #endif //NETKIT_SDK_ATTACHMENT_H

@@ -1,3 +1,4 @@
 /res/
 /data/
 /cmake-build-debug/
+peda-session*
