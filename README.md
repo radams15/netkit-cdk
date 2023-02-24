@@ -1,6 +1,30 @@
-# Specification
+# Netkit SDK
+
+A more verbose yet more understandable way to create netkit machines using code.
+
+Written in Perl, with few dependencies.
+
+Generates a standalone netkit lab from a selection of configurable objects.
+
+Allows configurations of:
+
+- LANs
+- Interface attachments
+- Static Routes
+- Firewall rules
+- NAT rules
+
+Other elements of startup files can be added using the Machine extra field.
+
+## Example Lab
+
+Place machine data folders in the ./data directory, run `perl main.pl`, and a lab folder appears in the ./res directory.
 
 ```perl
+#!/usr/bin/perl
+
+use strict;
+use warnings;
 
 use Machine;
 use Lan;
@@ -8,7 +32,6 @@ use Lab;
 use Interface;
 use Route;
 use Attachment;
-
 
 my $lab = Lab->new(
 	name => 'TestLab',
@@ -55,8 +78,11 @@ my $r2 = Machine->new(
 			eth => 1
 		),
 	],
-	extra => "\n\n###### Firewall Rules ######\n
-iptables --policy FORWARD DROP\n\n"
+	rules => [
+		Rule->new(
+			policy => 'FORWARD DROP',
+		),
+	],
 );
 
 my $gw = Machine->new(
@@ -91,6 +117,11 @@ my $gw = Machine->new(
 			eth => 1
 		),
 	],
+	rules => [
+		Rule->new(
+			policy => 'FORWARD DROP',
+		)
+	],
 );
 
 my $staff_1 = Machine->new(
@@ -116,7 +147,29 @@ my $staff_1 = Machine->new(
 	],
 );
 
+for my $port (25, 587, 993) {
+	$gw->rule(
+		Rule->new(
+			chain => 'FORWARD',
+			stateful => 1,
+			proto => 'tcp',
+			dst => '172.16.0.6',
+			dport => $port,
+			action => 'ACCEPT',
+		)
+	);
+	
+	$gw->rule(
+		Rule->new(
+				table => 'nat',
+				chain => 'PREROUTING',
+				proto => 'tcp',
+				to_dst => '172.16.0.6',
+				dport => $port,
+				action => 'DNAT',
+		)
+	);
+}
 
 $lab->dump($staff_1, $r2, $gw);
-
 ```
