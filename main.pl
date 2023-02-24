@@ -101,25 +101,33 @@ my $gw = Machine->new(
 	rules => [
 		Rule->new(
 			policy => 'FORWARD DROP',
-		),
+		)
+	],
+);
+
+for my $port (25, 587, 993) {
+	$gw->rule(
 		Rule->new(
 			chain => 'FORWARD',
 			stateful => 1,
 			proto => 'tcp',
 			dst => '172.16.0.6',
-			dport => 25,
+			dport => $port,
 			action => 'ACCEPT',
-		),
+		)
+	);
+	
+	$gw->rule(
 		Rule->new(
-			table => 'nat',
-			chain => 'PREROUTING',
-			proto => 'tcp',
-			to_dst => '172.16.0.6',
-			dport => 25,
-			action => 'DNAT',
-		),
-	],
-);
+				table => 'nat',
+				chain => 'PREROUTING',
+				proto => 'tcp',
+				to_dst => '172.16.0.6',
+				dport => $port,
+				action => 'DNAT',
+		)
+	);
+}
 
 my $staff_1 = Machine->new(
 	name => 'Staff-1',

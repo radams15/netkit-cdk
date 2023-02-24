@@ -29,6 +29,14 @@ sub new {
 	return $self;
 }
 
+sub rule {
+	my $class = shift;
+	
+	my ($rule) = @_;
+	
+	push @{$class->{rules}}, $rule;
+}
+
 sub extra {
 	my $class = shift;
 	
@@ -50,10 +58,8 @@ sub dump_startup {
 		$_->dump;
 	}
 	
-	select STDOUT;
-	
-	if (any {$_->{stateful}} @{$class->{rules}}) {
-		print "iptables -A FORWARD -m state --state RELATED,ESTABLISHED -j ACCEPT \n\n";
+	if (any {$_->{stateful}} @{$class->{rules}}) { # Add stateful rules if any of the rules has stateful=1
+		print "\niptables -A FORWARD -m state --state RELATED,ESTABLISHED -j ACCEPT \n\n";
 	}
 	
 	for (@{$class->{rules}}){
