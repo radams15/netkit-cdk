@@ -4,11 +4,13 @@ use strict;
 use warnings;
 
 use lib '.';
+
 use Machine;
 use Lan;
 use Lab;
 use Interface;
 use Route;
+use Attachment;
 
 
 my $lab = Lab->new(
@@ -21,7 +23,6 @@ my $lab = Lab->new(
 my $ext_www_lan = Lan->new('ExtWWW');
 my $dmz_lan = Lan->new('Dmz');
 my $staff_lan = Lan->new('Staff');
-
 
 my $r2 = Machine->new(
 	name => 'r2',
@@ -47,6 +48,50 @@ my $r2 = Machine->new(
 			via => '192.168.0.2'
 		),
 	],
+	attachments => [
+		Attachment->new(
+			lan => $dmz_lan,
+			eth => 0
+		),
+		Attachment->new(
+			lan => $staff_lan,
+			eth => 1
+		),
+	],
+);
+
+my $gw = Machine->new(
+	name => 'gw',
+	interfaces => [
+		Interface->new(
+			eth => 0,
+			ip => '80.64.157.254',
+		),
+		Interface->new(
+			eth => 1,
+			ip => '192.168.0.1/24',
+		),
+	],
+	routes => [
+		Route->new(
+			dst => '172.16.0.0/24',
+			via => '192.168.0.2'
+		),
+		Route->new(
+			dst => '10.0.0.0/20',
+			via => '192.168.0.3'
+		),
+	],
+	attachments => [
+		Attachment->new(
+			lan => $ext_www_lan,
+			eth => 0
+		),
+		Attachment->new(
+			lan => $dmz_lan,
+			eth => 1
+		),
+	],
 );
 
 my $staff_1 = Machine->new(
@@ -64,24 +109,13 @@ my $staff_1 = Machine->new(
 			via => '10.0.0.1'
 		),
 	],
+	attachments => [
+		Attachment->new(
+			lan => $staff_lan,
+			eth => 0,
+		),
+	],
 );
-
-$staff_1->attach(
-	lan => $staff_lan,
-	eth => 0
-);
-
-
-$r2->attach(
-	lan => $dmz_lan,
-	eth => 0
-);
-
-$r2->attach(
-	lan => $staff_lan,
-	eth => 1
-);
-
 
 $r2->extra(
 	header => 'Firewall Rules',
@@ -89,4 +123,4 @@ $r2->extra(
 );
 
 
-$lab->dump($staff_1, $r2);
+$lab->dump($staff_1, $r2, $gw);

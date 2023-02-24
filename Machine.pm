@@ -11,6 +11,7 @@ sub new {
 	my $name = $params{name};
 	my @interfaces = @{ $params{interfaces} };
 	my @routes = @{ $params{routes} };
+	my @attachments = @{ $params{attachments} // [] };
 
 	my $self = bless {
 		name => $name,
@@ -18,22 +19,10 @@ sub new {
 		conf_buffer => '',
 		startup_buffer => '',
 		routes => \@routes,
+		attachments => \@attachments,
 	}, $class;
 
 	return $self;
-}
-
-sub attach {
-	my $class = shift;
-	
-	my %params = @_;
-	
-	my $lan_name = $params{lan}->{name};
-	my $eth = $params{eth};
-	
-	my $name = $class->{name};
-	
-	$class->{conf_buffer} .= $name . '[' . $eth . "]=$lan_name\n";
 }
 
 sub extra {
@@ -73,7 +62,13 @@ sub dump_startup {
 
 sub dump_conf {
 	my $class = shift;
-	
+			
+	for (@{$class->{attachments}}) {
+		my $lan = $_->{lan};
+		
+		print $class->{name}, '[', $_->{eth} . "]=$lan->{name}\n";
+	}
+		
 	print $class->{conf_buffer}, "\n";
 }
 
