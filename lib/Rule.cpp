@@ -26,3 +26,13 @@ void Rule::dump(std::ostream& ostream) {
 
     ostream << std::endl;
 }
+
+Rule Rule::dnat(std::string dst, std::string proto, int port) {
+    return Rule{
+            .chain = "PREROUTING",
+            .proto = proto,
+            .dport = port,
+            .action = "DNAT",
+            .to_dst = dst,
+    };
+}

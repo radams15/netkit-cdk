@@ -6,6 +6,7 @@
 #define NETKITSDK_RULE_H
 
 #include <string>
+#include <vector>
 
 struct Rule {
     std::string table;
@@ -22,6 +23,8 @@ struct Rule {
     std::string policy;
 
     void dump(std::ostream& ostream);
+
+    static Rule dnat(std::string dst, std::string proto, int port);
 };
 
 

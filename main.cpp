@@ -106,13 +106,7 @@ int main(){
             .action = "ACCEPT"
         });
 
-        gw.rule(Rule{
-                .chain = "PREROUTING",
-                .proto = "tcp",
-                .dport = port,
-                .action = "DNAT",
-                .to_dst = "172.16.0.6",
-        });
+        gw.rule(Rule::dnat("172.16.0.6", "tcp", port));
     }
 
     lab.dump({gw, r2});
