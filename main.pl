@@ -11,6 +11,7 @@ use Lab;
 use Interface;
 use Route;
 use Attachment;
+use Rule;
 
 
 my $lab = Lab->new(
@@ -58,8 +59,11 @@ my $r2 = Machine->new(
 			eth => 1
 		),
 	],
-	extra => "\n\n###### Firewall Rules ######\n
-iptables --policy FORWARD DROP\n\n"
+	rules => [
+		Rule->new(
+			policy => 'FORWARD DROP',
+		),
+	],
 );
 
 my $gw = Machine->new(
@@ -92,6 +96,27 @@ my $gw = Machine->new(
 		Attachment->new(
 			lan => $dmz_lan,
 			eth => 1
+		),
+	],
+	rules => [
+		Rule->new(
+			policy => 'FORWARD DROP',
+		),
+		Rule->new(
+			chain => 'FORWARD',
+			stateful => 1,
+			proto => 'tcp',
+			dst => '172.16.0.6',
+			dport => 25,
+			action => 'ACCEPT',
+		),
+		Rule->new(
+			table => 'nat',
+			chain => 'PREROUTING',
+			proto => 'tcp',
+			to_dst => '172.16.0.6',
+			dport => 25,
+			action => 'DNAT',
 		),
 	],
 );

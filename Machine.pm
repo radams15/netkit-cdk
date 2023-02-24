@@ -3,15 +3,18 @@ package Machine;
 use strict;
 use warnings;
 
+use List::Util qw(any);
+
 sub new {
 	my $class = shift;
 	
 	my %params = @_;
 	
 	my $name = $params{name};
-	my @interfaces = @{ $params{interfaces} };
-	my @routes = @{ $params{routes} };
+	my @interfaces = @{ $params{interfaces} // [] };
+	my @routes = @{ $params{routes} // [] };
 	my @attachments = @{ $params{attachments} // [] };
+	my @rules = @{ $params{rules} // []};
 
 	my $self = bless {
 		name => $name,
@@ -20,6 +23,7 @@ sub new {
 		startup_buffer => $params{extra} // '',
 		routes => \@routes,
 		attachments => \@attachments,
+		rules => \@rules,
 	}, $class;
 
 	return $self;
@@ -39,22 +43,21 @@ sub dump_startup {
 	my $class = shift;
 	
 	for (@{$class->{interfaces}}){
-		print "ip link set dev eth$_->{eth} address $_->{mac}\n" if(defined $_->{mac});
-		
-		print "ip addr add $_->{ip} dev eth$_->{eth}\n" if(defined $_->{ip});
-		
-		print "ip link set eth$_->{eth} up\n";
-		
-		print "\n\n";
+		$_->dump;
 	}
 	
 	for (@{$class->{routes}}){
-		print "ip route add $_->{dst} ";
-		
-		print "via $_->{via} " if(defined $_->{via});
-		print "dev $_->{dev} " if(defined $_->{dev});
-		
-		print "\n";
+		$_->dump;
+	}
+	
+	select STDOUT;
+	
+	if (any {$_->{stateful}} @{$class->{rules}}) {
+		print "iptables -A FORWARD -m state --state RELATED,ESTABLISHED -j ACCEPT \n\n";
+	}
+	
+	for (@{$class->{rules}}){
+		$_->dump;
 	}
 	
 	print $class->{startup_buffer}, "\n";

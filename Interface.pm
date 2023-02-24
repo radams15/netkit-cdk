@@ -17,4 +17,16 @@ sub new {
 	return $self;
 }
 
+sub dump {
+	my $class = shift;
+	
+	print "ip link set dev eth$class->{eth} address $class->{mac}\n" if(defined $class->{mac});
+	
+	print "ip addr add $class->{ip} dev eth$class->{eth}\n" if(defined $class->{ip});
+	
+	print "ip link set eth$class->{eth} up\n";
+	
+	print "\n\n";
+}
+
 1;

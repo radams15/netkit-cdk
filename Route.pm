@@ -17,4 +17,16 @@ sub new {
 	return $self;
 }
 
+sub dump {
+	my $class = shift;
+	
+	print "ip route add $class->{dst} ";
+	
+	print "via $class->{via} " if(defined $class->{via});
+	print "dev $class->{dev} " if(defined $class->{dev});
+	
+	print "\n";
+}
+
+
 1;
