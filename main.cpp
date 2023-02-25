@@ -7,10 +7,6 @@
 #include "Lab.h"
 
 int main(){
-    Lab lab = Lab()
-            .out_dir("res")
-            .data_dir("data");
-
     Lan dmz_lan = Lan().name("Dmz");
     Lan ext_www_lan = Lan().name("Extwww");
     Lan staff_lan = Lan().name("Staff");
@@ -87,5 +83,11 @@ int main(){
         gw.rule(Rule::dnat("172.16.0.6", "tcp", port));
     }
 
-    lab.dump({gw, r2});
+    Lab lab = Lab()
+            .out_dir("res")
+            .data_dir("data")
+            .machine(gw)
+            .machine(r2);
+
+    lab.dump();
 }

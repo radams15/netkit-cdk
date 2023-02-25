@@ -6,6 +6,7 @@
 
 #include <iostream>
 #include <algorithm>
+#include <utility>
 
 void Machine::dump_startup(std::ostream& ostream) {
     std::cout << "Dump startup!\n\n";
@@ -72,6 +73,7 @@ Machine &Machine::attachment(Attachment attachment) {
 }
 
 Machine &Machine::name(std::string name) {
-    machine_name = name;
+    machine_name = std::move(name);
+    std::cout << "Machine name: " << machine_name << std::endl;
     return *this;
 }

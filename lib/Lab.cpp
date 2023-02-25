@@ -13,7 +13,11 @@
 
 namespace fs = std::filesystem;
 
-void Lab::dump(std::vector<Machine> machines) {
+void Lab::dump() {
+    return DUMP_VEC(_machines);
+}
+
+void Lab::DUMP_VEC(std::vector<Machine> machines) {
     std::cout << machines.size() << " Machines!" << std::endl << std::endl;
 
     if(!fs::is_directory(_out_dir) || !fs::exists(_out_dir)) {
@@ -38,6 +42,7 @@ void Lab::dump(std::vector<Machine> machines) {
     std::cout << "* Dumping Startup Files" << std::endl;
 
     for(auto machine : machines) {
+        std::cout << "Machine name is now: " << machine.machine_name << std::endl;
         std::string fname = _out_dir + "/" + machine.machine_name + ".startup";
 
         std::cout << "\tDumping " << fname << std::endl;
@@ -70,10 +75,16 @@ void Lab::dump(std::vector<Machine> machines) {
     lab_dep.close();
 }
 
+Lab& Lab::machine(Machine& machine) {
+    _machines.push_back(machine);
+
+    return *this;
+};
+
 DEF_SETTER(name, _name);
 DEF_SETTER(description, _description);
 DEF_SETTER(version, _version);
 DEF_SETTER(author, _author);
 DEF_SETTER(email, _email);
-DEF_SETTER(out_dir, _out_dir);
-DEF_SETTER(data_dir, _data_dir);
+DEF_SETTER(out_dir, _out_dir)
+DEF_SETTER(data_dir, _data_dir)
