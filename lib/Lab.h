@@ -8,17 +8,28 @@
 #include <string>
 #include "Machine.h"
 
+#define DECL_SETTER(name, var) Lab& name(std::string name)
+
 struct Lab {
-    std::string name;
-    std::string description;
-    std::string version;
-    std::string author;
-    std::string email;
-    std::string out_dir;
-    std::string data_dir;
+    std::string _name;
+    std::string _description;
+    std::string _version;
+    std::string _author;
+    std::string _email;
+    std::string _out_dir;
+    std::string _data_dir;
+
+    DECL_SETTER(name, _name);
+    DECL_SETTER(description, _description);
+    DECL_SETTER(version, _version);
+    DECL_SETTER(author, _author);
+    DECL_SETTER(email, _email);
+    DECL_SETTER(out_dir, _out_dir);
+    DECL_SETTER(data_dir, _data_dir);
 
     void dump(std::vector<Machine> machines);
 };
 
+#undef DECL_SETTER
 
 #endif //NETKITSDK_LAB_H

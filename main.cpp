@@ -7,103 +7,81 @@
 #include "Lab.h"
 
 int main(){
-    Lab lab{
-        .out_dir = "res",
-        .data_dir = "data",
-    };
+    Lab lab = Lab()
+            .out_dir("res")
+            .data_dir("data");
 
-    Lan dmz_lan{"Dmz"};
-    Lan ext_www_lan{"Extwww"};
-    Lan staff_lan{"Staff"};
+    Lan dmz_lan = Lan().name("Dmz");
+    Lan ext_www_lan = Lan().name("Extwww");
+    Lan staff_lan = Lan().name("Staff");
 
-    Machine r2{
-            .name = "r2",
-            .interfaces = {
-                    Interface{
-                        .eth = 0,
-                        .ip = "192.168.0.3/24",
-                        .mac = "a8:20:66:2d:30:bf"
-                    },
-                    Interface{
-                            .eth = 1,
-                            .ip = "10.0.0.1/20",
-                            .mac = "a8:20:66:3e:42:cf"
-                    },
-            },
-            .routes = {
-                    Route{
-                        .dst = "default",
-                        .via = "192.168.0.1"
-                    },
-                    Route{
-                        .dst = "172.16.0.0/24",
-                        .via = "192.168.0.2"
-                    }
-            },
-            .attachments = {
-                    Attachment{
-                        .lan = dmz_lan,
-                        .eth = 0
-                    },
-                    Attachment{
-                        .lan = staff_lan,
-                        .eth = 1
-                    }
-            },
-            .rules {
-                    Rule{
-                        .policy = "FORWARD DROP"
-                    }
-            }
-    };
+    Machine r2 = Machine()
+            .name("r2")
+            .interface(Interface().eth(0).ip("192.168.0.3/24").mac("a8:20:66:2d:30:bf"))
+            .interface({
+                               ._eth = 1,
+                               ._ip = "10.0.0.1/20",
+                               ._mac = "a8:20:66:3e:42:cf"
+                       })
+            .route(Route().dst("default").via("192.168.0.1"))
+            .route({
+                                ._dst = "172.16.0.0/24",
+                                ._via = "192.168.0.2"
+                        })
+            .attachment(Attachment().lan(dmz_lan).eth(0))
+            .attachment({
+                                ._lan = staff_lan,
+                                ._eth = 1
+                        })
+            .rule(Rule().policy("FORWARD DROP"));
 
     Machine gw{
-            .name = "gw",
+            .machine_name = "gw",
             .interfaces = {
                     Interface{
-                            .eth = 0,
-                            .ip = "80.64.157.254"
+                            ._eth = 0,
+                            ._ip = "80.64.157.254"
                     },
                     Interface{
-                            .eth = 1,
-                            .ip = "192.168.0.1/24"
+                            ._eth = 1,
+                            ._ip = "192.168.0.1/24"
                     },
             },
             .routes = {
                     Route{
-                            .dst = "172.16.0.0/24",
-                            .via = "192.168.0.2"
+                            ._dst = "172.16.0.0/24",
+                            ._via = "192.168.0.2"
                     },
                     Route{
-                            .dst = "10.0.0.0/20",
-                            .via = "192.168.0.3"
+                            ._dst = "10.0.0.0/20",
+                            ._via = "192.168.0.3"
                     }
             },
             .attachments = {
                     Attachment{
-                            .lan = ext_www_lan,
-                            .eth = 0
+                            ._lan = ext_www_lan,
+                            ._eth = 0
                     },
                     Attachment{
-                            .lan = dmz_lan,
-                            .eth = 1
+                            ._lan = dmz_lan,
+                            ._eth = 1
                     }
             },
             .rules {
                     Rule{
-                            .policy = "FORWARD DROP"
+                            ._policy = "FORWARD DROP"
                     }
             }
     };
 
     for(auto port : {25, 587, 993}) {
-        gw.rule(Rule{
-            .chain = "FORWARD",
-            .stateful = true,
-            .proto = "tcp",
-            .dst = "172.16.0.6",
-            .dport = port,
-            .action = "ACCEPT"
+        gw.rule({
+            ._chain = "FORWARD",
+            ._stateful = true,
+            ._proto = "tcp",
+            ._dst = "172.16.0.6",
+            ._dport = port,
+            ._action = "ACCEPT"
         });
 
         gw.rule(Rule::dnat("172.16.0.6", "tcp", port));

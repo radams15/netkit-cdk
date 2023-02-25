@@ -8,7 +8,9 @@
 #include <string>
 
 struct Lan {
-    std::string name;
+    std::string _name;
+
+    Lan& name(std::string name);
 };
 
 #endif //NETKITSDK_LAN_H

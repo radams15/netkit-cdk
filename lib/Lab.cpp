@@ -9,22 +9,24 @@
 
 #include <filesystem>
 
+#define DEF_SETTER(name, var) Lab& Lab::name(std::string name){ var = name ; return *this; }
+
 namespace fs = std::filesystem;
 
 void Lab::dump(std::vector<Machine> machines) {
     std::cout << machines.size() << " Machines!" << std::endl << std::endl;
 
-    if(!fs::is_directory(out_dir) || !fs::exists(out_dir)) {
-        fs::create_directories(out_dir);
+    if(!fs::is_directory(_out_dir) || !fs::exists(_out_dir)) {
+        fs::create_directories(_out_dir);
     }
 
-    std::string conf_file = out_dir + "/lab.conf";
+    std::string conf_file = _out_dir + "/lab.conf";
     std::ofstream conf_stream(conf_file);
 
-    conf_stream << "LAB_DESCRIPTION=" << description
-                << "\nLAB_VERSION=" << version
-                << "\nLAB_AUTHOR=" << author
-                << "\nLAB_EMAIL=" << email
+    conf_stream << "LAB_DESCRIPTION=" << _description
+                << "\nLAB_VERSION=" << _version
+                << "\nLAB_AUTHOR=" << _author
+                << "\nLAB_EMAIL=" << _email
                 << "\n\n";
 
     for(auto machine : machines) {
@@ -36,7 +38,7 @@ void Lab::dump(std::vector<Machine> machines) {
     std::cout << "* Dumping Startup Files" << std::endl;
 
     for(auto machine : machines) {
-        std::string fname = out_dir + "/" + machine.name + ".startup";
+        std::string fname = _out_dir + "/" + machine.machine_name + ".startup";
 
         std::cout << "\tDumping " << fname << std::endl;
 
@@ -49,21 +51,29 @@ void Lab::dump(std::vector<Machine> machines) {
 
     std::cout << "* Copying Data Folders" << std::endl;
 
-    for(auto folder : fs::directory_iterator{fs::path{data_dir}}){
+    for(auto folder : fs::directory_iterator{fs::path{_data_dir}}){
         if(is_directory(folder.path())){
             for(auto machine : machines){
-                if(machine.name == folder.path().filename().string()){
-                    std::cout << "Copy " << folder.path().filename().string() << " to " << out_dir << std::endl;
+                if(machine.machine_name == folder.path().filename().string()){
+                    std::cout << "Copy " << folder.path().filename().string() << " to " << _out_dir << std::endl;
 
                     copy(
                             folder.path(),
-                            fs::path{ out_dir + "/" + folder.path().filename().string() },
+                            fs::path{_out_dir + "/" + folder.path().filename().string() },
                             fs::copy_options::recursive | fs::copy_options::overwrite_existing);
                 }
             }
         }
     }
 
-    std::ofstream lab_dep(out_dir + "/lab.dep");
+    std::ofstream lab_dep(_out_dir + "/lab.dep");
     lab_dep.close();
 }
+
+DEF_SETTER(name, _name);
+DEF_SETTER(description, _description);
+DEF_SETTER(version, _version);
+DEF_SETTER(author, _author);
+DEF_SETTER(email, _email);
+DEF_SETTER(out_dir, _out_dir);
+DEF_SETTER(data_dir, _data_dir);
