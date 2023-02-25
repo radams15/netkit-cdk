@@ -1,4 +1,4 @@
-package Netkit::Rule;
+package Rule;
 
 use strict;
 use warnings;

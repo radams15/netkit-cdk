@@ -1,4 +1,4 @@
-package Netkit::Lan;
+package Lan;
 
 use strict;
 use warnings;

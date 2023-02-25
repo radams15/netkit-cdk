@@ -5,13 +5,13 @@ use warnings;
 
 use lib './lib';
 
-use Machine;
-use Lan;
-use Lab;
-use Interface;
-use Route;
-use Attachment;
-use Rule;
+use Netkit::Machine;
+use Netkit::Lan;
+use Netkit::Lab;
+use Netkit::Interface;
+use Netkit::Route;
+use Netkit::Attachment;
+use Netkit::Rule;
 
 sub dnat {
 	my %args = @_;

@@ -1,4 +1,4 @@
-package Netkit::Route;
+package Route;
 
 use strict;
 use warnings;
@@ -27,6 +27,5 @@ sub dump {
 	
 	print "\n";
 }
-
 
 1;

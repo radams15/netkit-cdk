@@ -1,4 +1,4 @@
-package Netkit::Machine;
+package Machine;
 
 use strict;
 use warnings;

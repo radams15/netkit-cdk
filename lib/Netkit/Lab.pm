@@ -1,4 +1,4 @@
-package Netkit::Lab;
+package Lab;
 
 use strict;
 use warnings;
@@ -106,7 +106,7 @@ LAB_EMAIL=$class->{email}\n\n";
 
 # Below is stub documentation for your module. You'd better edit it!
 
-=head1 Netkit::Attachment
+=head1 Attachment
 
 SDK for netkit - create netkit labs with code.
 

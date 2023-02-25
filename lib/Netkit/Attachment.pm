@@ -1,4 +1,4 @@
-package Netkit::Attachment;
+package Attachment;
 
 use strict;
 use warnings;
