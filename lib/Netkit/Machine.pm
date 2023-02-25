@@ -29,6 +29,18 @@ sub new {
 	return $self;
 }
 
+sub ips {
+	my $class = shift;
+
+	return map {
+		if($_->{ip} =~ /((?:(?:25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9][0-9]|[0-9])\.){3}(?:25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9][0-9]|[0-9]))(?:\/\d+)?/g){
+			$1;
+		}else{
+			return $_->{ip};
+		}
+	} @{$class->{interfaces}};
+}
+
 sub rule {
 	my $class = shift;
 	

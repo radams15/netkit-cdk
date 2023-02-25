@@ -166,3 +166,7 @@ dnat (
 );
 
 $lab->dump($gw, $r2, $staff_1);
+
+for($gw->ips){
+	print "$_\n";
+}
