@@ -12,3 +12,11 @@ jobs:
           perl-version: '5.30'
       - run: perl Makefile.PL
       - run: make dist
+
+      - name: Release
+        uses: marvinpinto/action-automatic-releases@latest
+        with:
+          repo_token: "${{ secrets.RELEASE_TOKEN }}"
+          prerelease: false
+          files: |
+            Netkit*.tar.gz
