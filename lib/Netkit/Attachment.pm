@@ -3,6 +3,25 @@ package Attachment;
 use strict;
 use warnings;
 
+=head1 DESCRIPTION
+
+Simple module which is basically a struct.
+
+Stores eth number and a Lan object.
+
+=over 4
+
+=item new()
+
+Creates a new Attachment.
+
+Usage:
+
+ my $lan = Lan->new (eth => 0, lan => $lan);
+
+=back
+=cut
+
 sub new {
 	my $class = shift;
 	my %params = @_;

@@ -3,6 +3,27 @@ package Interface;
 use strict;
 use warnings;
 
+=head1 DESCRIPTION
+
+Simple module which is basically a struct.
+
+Stores eth number, ip address (optional) and mac address (optional).
+
+=over 4
+
+=item new()
+
+Creates a new Attachment.
+
+Usage:
+
+ my $interface = Interface->new (
+	   eth => 0,
+	   ip => '10.0.0.2'
+ );
+
+=cut
+
 sub new {
 	my $class = shift;
 	
@@ -17,6 +38,12 @@ sub new {
 	return $self;
 }
 
+=item dump()
+
+Prints the Interface to selected file.
+
+=back
+=cut
 sub dump {
 	my $class = shift;
 	
