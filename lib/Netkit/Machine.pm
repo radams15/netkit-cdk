@@ -73,6 +73,18 @@ sub dump_startup {
 		print "\niptables -A FORWARD -m state --state RELATED,ESTABLISHED -j ACCEPT \n\n";
 	}
 	
+	for (grep {defined($_->{vlan})} @{$class->{attachments}}) {
+		my $vlan = $_->{vlan};
+		
+		print 'bridge vlan add vid ' . $vlan->{vid} . ' ';
+		
+		if(! $_->{tagged}){
+			print 'pvid untagged ';
+		}
+		
+		print "dev eth$_->{eth}\n";
+	}
+	
 	for (@{$class->{rules}}){
 		$_->dump;
 	}
@@ -83,7 +95,7 @@ sub dump_startup {
 sub dump_conf {
 	my $class = shift;
 			
-	for (@{$class->{attachments}}) {
+	for (grep {defined($_->{lan})} @{$class->{attachments}}) {
 		my $lan = $_->{lan};
 		
 		print $class->{name}, '[', $_->{eth} . "]=$lan->{name}\n";

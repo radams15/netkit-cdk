@@ -5,13 +5,7 @@ use warnings;
 
 use lib './lib';
 
-use Netkit::Machine;
-use Netkit::Lan;
-use Netkit::Lab;
-use Netkit::Interface;
-use Netkit::Route;
-use Netkit::Attachment;
-use Netkit::Rule;
+use Netkit;
 
 sub dnat {
 	my %args = @_;
@@ -51,6 +45,8 @@ my $lab = Lab->new (
 	data_dir => 'data',
 );
 
+my $vlan_1 = Vlan->new (111);
+
 
 my $ext_www_lan = Lan->new ('ExtWWW');
 my $dmz_lan = Lan->new ('Dmz');
@@ -87,6 +83,10 @@ my $r2 = Machine->new (
 		),
 		Attachment->new (
 			lan => $staff_lan,
+			eth => 1
+		),
+		Attachment->new (
+			vlan => $vlan_1,
 			eth => 1
 		),
 	],
@@ -166,7 +166,3 @@ dnat (
 );
 
 $lab->dump($gw, $r2, $staff_1);
-
-for($gw->ips){
-	print "$_\n";
-}

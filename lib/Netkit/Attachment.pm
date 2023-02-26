@@ -17,7 +17,7 @@ Creates a new Attachment.
 
 Usage:
 
- my $lan = Lan->new (eth => 0, lan => $lan);
+ my $lan = Lan->new (eth => 0, lan => $lan, vlan=$vlan);
 
 =back
 =cut
@@ -29,6 +29,8 @@ sub new {
 	my $self = bless {
 		eth => $params{eth},
 		lan => $params{lan},
+		vlan => $params{vlan},
+		tagged => $params{tagged}
 	}, $class;
 	
 	return $self;

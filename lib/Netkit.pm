@@ -2,6 +2,7 @@ package Netkit;
 
 use Netkit::Machine;
 use Netkit::Lan;
+use Netkit::Vlan;
 use Netkit::Lab;
 use Netkit::Interface;
 use Netkit::Route;
