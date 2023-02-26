@@ -1,5 +1,7 @@
 # Netkit SDK
 
+![Build Status](https://github.com/radams15/netkit-sdk/actions/workflows/build-package.yaml/badge.svg)
+
 A more verbose yet more understandable way to create netkit machines using code.
 
 Written in Perl, with few dependencies.
