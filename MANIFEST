@@ -2,6 +2,7 @@ Changes
 Makefile.PL
 MANIFEST
 README
+lib/Netkit.pm
 lib/Netkit/Attachment.pm
 lib/Netkit/Interface.pm
 lib/Netkit/Lab.pm
