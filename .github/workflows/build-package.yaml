@@ -10,6 +10,6 @@ jobs:
         uses: shogo82148/actions-setup-perl@v1
         with:
           perl-version: '5.30'
-      - run: perl -V
-      - run: perl Makefile.PM
+      - run: cpan install -y File::Copy::Recursive
+      - run: perl Makefile.PL
       - run: make dist
