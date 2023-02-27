@@ -87,7 +87,8 @@ my $r2 = Machine->new (
 		),
 		Attachment->new (
 			vlan => $vlan_1,
-			eth => 1
+			eth => 1,
+			untagged => 0,
 		),
 	],
 	rules => [

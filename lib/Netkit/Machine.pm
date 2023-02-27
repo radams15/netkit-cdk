@@ -78,7 +78,7 @@ sub dump_startup {
 		
 		print 'bridge vlan add vid ' . $vlan->{vid} . ' ';
 		
-		if(! $_->{tagged}){
+		if($_->{untagged}){
 			print 'pvid untagged ';
 		}
 		
