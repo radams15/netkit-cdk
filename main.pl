@@ -45,12 +45,18 @@ my $lab = Lab->new (
 	data_dir => 'data',
 );
 
+# VLANs
+
 my $vlan_1 = Vlan->new (111);
 
+# LANs
 
 my $ext_www_lan = Lan->new ('ExtWWW');
 my $dmz_lan = Lan->new ('Dmz');
 my $staff_lan = Lan->new ('Staff');
+
+
+# Machines
 
 my $r2 = Machine->new (
 	name => 'r2',
@@ -160,10 +166,16 @@ my $staff_1 = Machine->new (
 	],
 );
 
+# DNAT mail ports to 172.16.0.6
 dnat (
 	src => $gw,
 	dst =>'172.16.0.6',
 	ports => [25, 587, 993]
 );
 
-$lab->dump($gw, $r2, $staff_1);
+# Dump the labs to the output directory
+$lab->dump (
+	$gw,
+	$r2,
+	$staff_1
+);
