@@ -5,7 +5,9 @@ use warnings;
 
 use List::Util qw(any);
 
-
+=head1 DESCRIPTION
+This module stores the machine configuration.
+=cut
 sub new {
 	my $class = shift;
 	
