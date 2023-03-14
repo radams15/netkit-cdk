@@ -6,6 +6,9 @@ use warnings;
 use List::Util qw(any);
 use File::Copy::Recursive qw(dircopy);
 
+=head1 DESCRIPTION
+This module stores information about the lab which is output to the lab.conf file.
+=cut
 sub new {
 	my $class = shift;
 	my %params = @_;
@@ -25,6 +28,14 @@ sub new {
 	return $self;
 }
 
+=item dump()
+
+Outputs the content of lab.conf into the folder defined as out_dir.
+
+Dumps every machine passes as args, which dumps its' own content in the lab.conf and its' own startup files.
+
+=back
+=cut
 sub dump {
 	my $class = shift;
 	
