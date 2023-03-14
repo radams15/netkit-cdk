@@ -80,7 +80,7 @@ LAB_EMAIL=$class->{email}\n\n";
 		open FH, '>', $fname;
 		select FH;
 		
-		print "****** $name ******\n\n";
+		print "###### $name ######\n\n";
 		
 		$_->dump_startup;
 		
