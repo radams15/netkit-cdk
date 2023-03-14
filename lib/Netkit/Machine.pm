@@ -27,7 +27,7 @@ sub new {
 		routes => \@routes,
 		attachments => \@attachments,
 		rules => \@rules,
-		switch => $params{switch} // 0,
+		switch => $params{switch},
 	}, $class;
 
 	return $self;
@@ -65,21 +65,20 @@ sub dump_startup {
 	my $class = shift;
 	
 	# Dump the interface IPs and MACs.
+	print "# Interface Configuration\n\n";
 	for (@{$class->{interfaces}}){
 		$_->dump;
 	}
 	
 	# Dump the static routes
+	print "# Static Route Configuration\n\n";
 	for (@{$class->{routes}}){
 		$_->dump;
 	}
-	
-	if (any {$_->{stateful}} @{$class->{rules}}) { # Add stateful rules if any of the rules has stateful=1
-		print "\niptables -A FORWARD -m state --state RELATED,ESTABLISHED -j ACCEPT \n\n";
-	}
 
 	if(defined($class->{switch})) {
-		print "\
+		print "# Switch Configuration\n\n";
+		print "
 ip link add sw0 type bridge \
 	stp_state 1 \
 	priority 9000 \
@@ -87,14 +86,19 @@ ip link add sw0 type bridge \
 
 		for(@{$class->{interfaces}}) {
 			my $eth = 'eth'.$_->{eth};
-			print "ip link set dev $eth master sw0\n";
-			print "ip link set dev $eth promisc on\n\n";
+			
+			print "ip link set dev $eth group 11\n";
 		}
+		
+		print "\nip link set group 11 master sw0\n";
+		print "ip link set group 11 promisc on\n\n";
+		
 		print "ip link set dev sw0 up\n\n";
 	}
 
 	# Dump the VLANs
-	for (grep {defined($_->{vlan})} @{$class->{attachments}}) { # For every attachment with a VLAN
+	print "# VLAN Configuration\n\n";
+	for (grep {defined($_->{vlan})} @{$class->{attachments}}) { # For every attachment with a VLAN		
 		my $vlan = $_->{vlan};
 		
 		print "bridge vlan add vid $vlan->{vid} ";
@@ -106,10 +110,18 @@ ip link add sw0 type bridge \
 		print "dev eth$_->{eth}\n";
 	}
 	
+	print "# Firewall Configuration\n\n";
+	
+	if (any {$_->{stateful}} @{$class->{rules}}) { # Add stateful rules if any of the rules has stateful=1
+		print "\niptables -A FORWARD -m state --state RELATED,ESTABLISHED -j ACCEPT \n\n";
+	}
+	
 	# Dump the firewall rules
 	for (@{$class->{rules}}){
 		$_->dump;
 	}
+	
+	print "# Extra Configuration\n\n";
 	
 	# Add the extra startup from the extra parameter.
 	print $class->{startup_buffer}, "\n";

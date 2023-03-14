@@ -4,6 +4,7 @@ use strict;
 use warnings;
 
 use List::Util qw(any);
+use File::Spec qw(rel2abs);
 use File::Copy::Recursive qw(dircopy);
 
 =head1 DESCRIPTION
@@ -95,12 +96,29 @@ LAB_EMAIL=$class->{email}\n\n";
 	my @machine_names = map {$_->{name}} @machines;
 	my $data_dir = $class->{data_dir};
 	
+	for my $machine (@machine_names) {
+		my $expected_folder = File::Spec->rel2abs("$data_dir/$machine");
+		my $dest_folder = File::Spec->rel2abs($class->{out_dir}."/$machine");
+		
+		if(-d $expected_folder) { # Source folder exists
+				print "\t* Copy $expected_folder to dest_folder\n";
+				dircopy($expected_folder, $dest_folder) or die("$!\n");
+		}else { # No source folder exists, create an empty one.
+			print "\t* Create $dest_folder for $machine\n";
+			mkdir $dest_folder;
+			
+			open FH, '>', "$dest_folder/.gitkeep"; # Make file so git commits the folder.
+			close FH;
+		}
+	}
+	
 	for my $folder (<$data_dir/*>) {
 		if($folder =~ s/$data_dir\///g){
 			if(any {$_ eq $folder} @machine_names){
-			
 				print "\t* Copy $folder to $class->{out_dir}/$folder\n";
 				dircopy("$data_dir/$folder", "$class->{out_dir}/$folder") or die("$!\n");
+			}else {
+				print "\t* Create folder for machine $folder\n";
 			}
 		}
 	}
