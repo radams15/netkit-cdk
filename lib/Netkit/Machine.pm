@@ -25,6 +25,7 @@ sub new {
 		routes => \@routes,
 		attachments => \@attachments,
 		rules => \@rules,
+		switch => $params{switch} // 0,
 	}, $class;
 
 	return $self;
@@ -74,7 +75,22 @@ sub dump_startup {
 	if (any {$_->{stateful}} @{$class->{rules}}) { # Add stateful rules if any of the rules has stateful=1
 		print "\niptables -A FORWARD -m state --state RELATED,ESTABLISHED -j ACCEPT \n\n";
 	}
-	
+
+	if(defined($class->{switch})) {
+		print "\
+ip link add sw0 type bridge \
+	stp_state 1 \
+	priority 9000 \
+	vlan_filtering 0\n\n";
+
+		for(@{$class->{interfaces}}) {
+			my $eth = 'eth'.$_->{eth};
+			print "ip link set dev $eth master sw0\n";
+			print "ip link set dev $eth promisc on\n\n";
+		}
+		print "ip link set dev sw0 up\n\n";
+	}
+
 	# Dump the VLANs
 	for (grep {defined($_->{vlan})} @{$class->{attachments}}) { # For every attachment with a VLAN
 		my $vlan = $_->{vlan};
