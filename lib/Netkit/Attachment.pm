@@ -25,7 +25,7 @@ Usage:
 sub new {
 	my $class = shift;
 	my %params = @_;
-	
+
 	my $self = bless {
 		eth => $params{eth},
 		lan => $params{lan},
@@ -35,6 +35,12 @@ sub new {
 	}, $class;
 	
 	return $self;
+}
+
+sub generate_lan_name {
+	my ($switch, $machine) = @_;
+	
+	join '-', sort ($switch->{name}, $machine->{name});
 }
 
 1;
