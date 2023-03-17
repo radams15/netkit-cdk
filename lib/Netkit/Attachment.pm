@@ -40,7 +40,9 @@ sub new {
 sub generate_lan_name {
 	my ($switch, $machine) = @_;
 	
-	join '-', sort ($switch->{name}, $machine->{name});
+	my $out = join '-', sort ($switch->{name}, $machine->{name});
+	$out =~ s/\-/\_/g;
+	$out;
 }
 
 1;

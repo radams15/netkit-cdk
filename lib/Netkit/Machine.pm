@@ -79,9 +79,9 @@ sub dump_startup {
 	if(defined($class->{switch})) {
 		print "# Switch Configuration\n\n";
 		print "
-ip link add sw0 type bridge \
-	stp_state 1 \
-	priority 9000 \
+ip link add sw0 type bridge \\
+	stp_state 1 \\
+	priority 9000 \\
 	vlan_filtering 0\n\n";
 
 		for(@{$class->{interfaces}}) {
