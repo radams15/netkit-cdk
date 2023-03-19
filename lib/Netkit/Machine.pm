@@ -103,7 +103,7 @@ ip link add sw0 type bridge \\
 		
 		print "bridge vlan add vid $vlan->{vid} ";
 		
-		if($_->{untagged}){
+		if(defined($_->{untagged})){
 			print 'pvid untagged ';
 		}
 		

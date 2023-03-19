@@ -13,6 +13,8 @@ sub new {
 		chain => $params{chain},
 		stateful => $params{stateful},
 		proto => $params{proto},
+		in => $params{in},
+		out => $params{out},
 		dst => $params{dst},
 		src => $params{src},
 		dport => $params{dport},
@@ -35,6 +37,8 @@ sub dump {
 	print "-A $class->{chain} " if defined($class->{chain});
 	print "-m state --state NEW " if defined($class->{stateful});
 	print "-p $class->{proto} " if defined($class->{proto});
+	print "-i $class->{in} " if defined($class->{in});
+	print "-o $class->{out} " if defined($class->{out});
 	print "-d $class->{dst} " if defined($class->{dst});
 	print "-s $class->{src} " if defined($class->{src});
 	print "--dport $class->{dport} " if defined($class->{dport});
