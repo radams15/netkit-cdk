@@ -39,8 +39,9 @@ Dumps every machine passes as args, which dumps its' own content in the lab.conf
 =cut
 sub dump {
 	my $class = shift;
+	my %params = @_;
 	
-	my @machines = @_;
+	my @machines = @{ $params{machines} };
 	
 	print "Machines: ", scalar @machines, "\n\n";
 	
@@ -83,7 +84,10 @@ LAB_EMAIL=$class->{email}\n\n";
 		
 		print "###### $name ######\n\n";
 		
-		$_->dump_startup;
+		$_->dump_startup(
+			disable_vlans => $params{disable_vlans} // 0,
+			disable_firewalls => $params{disable_firewalls} // 0,
+		);
 		
 		select STDOUT;
 		close FH;

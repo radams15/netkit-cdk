@@ -175,7 +175,11 @@ dnat (
 
 # Dump the labs to the output directory
 $lab->dump (
-	$gw,
-	$r2,
-	$staff_1
+	disable_vlans => 1,
+	disable_firewalls => 1,
+	machines => [
+		$gw,
+		$r2,
+		$staff_1,
+	]
 );
