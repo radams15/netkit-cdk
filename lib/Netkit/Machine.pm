@@ -63,6 +63,7 @@ sub extra {
 
 sub dump_startup {
 	my $class = shift;
+	my %params = @_;
 	
 	# Dump the interface IPs and MACs.
 	print "# Interface Configuration\n\n";
@@ -96,29 +97,33 @@ ip link add sw0 type bridge \\
 		print "ip link set dev sw0 up\n\n";
 	}
 
-	# Dump the VLANs
-	print "# VLAN Configuration\n\n";
-	for (grep {defined($_->{vlan})} @{$class->{attachments}}) { # For every attachment with a VLAN		
-		my $vlan = $_->{vlan};
+	unless($params{disable_vlans}) {
+		# Dump the VLANs
+		print "# VLAN Configuration\n\n";
+		for (grep {defined($_->{vlan})} @{$class->{attachments}}) { # For every attachment with a VLAN		
+			my $vlan = $_->{vlan};
+			
+			print "bridge vlan add vid $vlan->{vid} ";
+			
+			if(defined $_->{untagged}){
+				print 'pvid untagged ';
+			}
+			
+			print "dev eth$_->{eth}\n";
+		}
+	}
+	
+	unless($params{disable_firewalls}) {
+		print "# Firewall Configuration\n\n";
 		
-		print "bridge vlan add vid $vlan->{vid} ";
-		
-		if(defined($_->{untagged})){
-			print 'pvid untagged ';
+		if (any {$_->{stateful}} @{$class->{rules}}) { # Add stateful rules if any of the rules has stateful=1
+			print "\niptables -A FORWARD -m state --state RELATED,ESTABLISHED -j ACCEPT \n\n";
 		}
 		
-		print "dev eth$_->{eth}\n";
-	}
-	
-	print "# Firewall Configuration\n\n";
-	
-	if (any {$_->{stateful}} @{$class->{rules}}) { # Add stateful rules if any of the rules has stateful=1
-		print "\niptables -A FORWARD -m state --state RELATED,ESTABLISHED -j ACCEPT \n\n";
-	}
-	
-	# Dump the firewall rules
-	for (@{$class->{rules}}){
-		$_->dump;
+		# Dump the firewall rules
+		for (@{$class->{rules}}){
+			$_->dump;
+		}
 	}
 	
 	print "# Extra Configuration\n\n";
