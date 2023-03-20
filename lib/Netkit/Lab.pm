@@ -117,14 +117,14 @@ LAB_EMAIL=$class->{email}\n\n";
 	}
 	
 	for my $folder (<$data_dir/*>) {
-		if($folder =~ s/$data_dir\///g){
-			if(any {$_ eq $folder} @machine_names){
+			$folder =~ s/$data_dir\///g;
+			
+			if((any {$_ eq $folder} @machine_names) || $folder eq 'shared') {
 				print "\t* Copy $folder to $class->{out_dir}/$folder\n";
 				dircopy("$data_dir/$folder", "$class->{out_dir}/$folder") or die("$!\n");
 			}else {
 				print "\t* Create folder for machine $folder\n";
 			}
-		}
 	}
 	
 	## Create lab.dep
