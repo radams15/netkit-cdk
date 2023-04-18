@@ -12,18 +12,21 @@ This module stores information about the lab which is output to the lab.conf fil
 =cut
 sub new {
 	my $class = shift;
-	my %params = @_;
+	my (%params) = @_;
 	
 	die "Must specify data_dir" if not defined($params{data_dir});
 
+	printf "Name: %s\n", ($params{name} // 'BAD');
+
 	my $self = bless {
-		name => $params{name} // 'Unknown',
+		name => ($params{name} // 'Unknown'),
 		description => $params{description} // 'None',
 		version => $params{version} // 'None',
 		author => $params{author} // 'Unknown',
 		email => $params{email} // 'Unknown',
 		out_dir => $params{out_dir} // 'lab',
 		data_dir => $params{data_dir},
+                shared => $params{shared} // '',
 	}, $class;
 
 	return $self;
@@ -57,7 +60,8 @@ sub dump {
 	open FH, '>', $conf_file;
 	select FH;
 	
-	print "LAB_DESCRIPTION=$class->{description}
+	print "LAB_NAME=$class->{name}
+LAB_DESCRIPTION=$class->{description}
 LAB_VERSION=$class->{version}
 LAB_AUTHOR=$class->{author}
 LAB_EMAIL=$class->{email}\n\n";
@@ -88,6 +92,10 @@ LAB_EMAIL=$class->{email}\n\n";
 			disable_vlans => $params{disable_vlans} // 0,
 			disable_firewalls => $params{disable_firewalls} // 0,
 		);
+
+		print "\n###### Shared Startup ######\n\n";
+
+		print $class->{shared}, "\n\n";
 		
 		select STDOUT;
 		close FH;

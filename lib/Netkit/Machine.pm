@@ -28,6 +28,7 @@ sub new {
 		attachments => \@attachments,
 		rules => \@rules,
 		switch => $params{switch},
+		vlan_filtering => $params{vlan_filtering} // 0,
 	}, $class;
 
 	return $self;
@@ -35,12 +36,17 @@ sub new {
 
 sub ips {
 	my $class = shift;
-
-	return map {
+	
+	my %out;
+	
+	for(@{$class->{interfaces}}) {
 		my $ip = $_->{ip};
 		$ip =~ s/\/\d+$//g;
-		return $ip;
-	} @{$class->{interfaces}};
+		
+		$out{$_->{eth}} = $ip;
+	}
+	
+	\%out;
 }
 
 sub rule {
@@ -83,7 +89,7 @@ sub dump_startup {
 ip link add sw0 type bridge \\
 	stp_state 1 \\
 	priority 9000 \\
-	vlan_filtering 0\n\n";
+	vlan_filtering $class->{vlan_filtering}\n\n";
 
 		for(@{$class->{interfaces}}) {
 			my $eth = 'eth'.$_->{eth};
@@ -145,5 +151,23 @@ sub dump_conf {
 	# Add the extra conf from the extra_conf parameter.
 	print $class->{conf_buffer}, "\n";
 }
+
+=pod # TODO BROKEN
+sub attach {
+	my $class = shift;
+	
+	for(@_) {
+		if(defined $_->{machine}) {
+			$_->{lan} = Attachment::generate_lan_name ($_->{machine}, $class);
+			
+			push @{$_->{machine}->{attachments}}, $_;
+		}
+		
+		push @{$class->{attachments}}, $_;
+	}
+	
+	$class;
+}
+=cut
 
 1;

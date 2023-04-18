@@ -32,6 +32,7 @@ sub new {
 		vlan => $params{vlan},
 		untagged => $params{untagged},
 		group => $params{group},
+		machine => $params{machine},
 	}, $class;
 	
 	return $self;

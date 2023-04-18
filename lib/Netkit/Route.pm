@@ -23,7 +23,7 @@ sub dump {
 	print "ip route add $class->{dst} ";
 	
 	print "via $class->{via} " if(defined $class->{via});
-	print "dev $class->{dev} " if(defined $class->{dev});
+	print "dev $class->{dev} onlink " if(defined $class->{dev}); # Onlink = allow even if nexthop is invalid; requires dev to be used.
 	
 	print "\n";
 }
