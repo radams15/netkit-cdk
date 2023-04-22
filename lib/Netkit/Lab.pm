@@ -45,6 +45,7 @@ sub dump {
 	my %params = @_;
 	
 	my @machines = @{ $params{machines} };
+	my %deps = %{ $params{deps} };
 	
 	print "Machines: ", scalar @machines, "\n\n";
 	
@@ -138,6 +139,17 @@ LAB_EMAIL=$class->{email}\n\n";
 	## Create lab.dep
 	
 	open FH, '>', "$class->{out_dir}/lab.dep";
+	
+	while(my ($machine, $deps) = each %deps) {
+		print FH "$machine:";
+
+		foreach(@$deps) {
+			print FH " $_";
+		}
+
+		print FH "\n";
+	}
+	
 	close FH;
 }
 

@@ -28,6 +28,16 @@ sub new {
 	return $self;
 }
 
+sub multiport {
+	my ($type, $val) = @_;
+
+	if(ref $val eq 'ARRAY') {
+		print "--match multiport $type ", (join ',', @$val), ' ';
+	} else {
+		print "$val ";
+	}
+}
+
 sub dump {
 	my $class = shift;
 	
@@ -41,8 +51,10 @@ sub dump {
 	print "-o $class->{out} " if defined($class->{out});
 	print "-d $class->{dst} " if defined($class->{dst});
 	print "-s $class->{src} " if defined($class->{src});
-	print "--dport $class->{dport} " if defined($class->{dport});
-	print "--sport $class->{sport} " if defined($class->{sport});
+
+	multiport('--dport', $class->{dport}) if defined($class->{dport});
+	multiport('--sport', $class->{sport}) if defined($class->{sport});
+
 	print "-j $class->{action} " if defined($class->{action});
 	print "--to-destination $class->{to_dst} " if defined($class->{to_dst});
 	print "--to-source $class->{to_src} " if defined($class->{to_src});
