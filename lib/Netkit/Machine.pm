@@ -29,6 +29,7 @@ sub new {
 		rules => \@rules,
 		switch => $params{switch},
 		vlan_filtering => $params{vlan_filtering} // 0,
+		stp => $params{disable_stp}? 0 : 1,
 	}, $class;
 
 	return $self;
@@ -87,7 +88,7 @@ sub dump_startup {
 		print "# Switch Configuration\n\n";
 		print "
 ip link add sw0 type bridge \\
-	stp_state 1 \\
+	stp_state $class->{stp} \\
 	priority 9000 \\
 	vlan_filtering $class->{vlan_filtering}\n\n";
 
